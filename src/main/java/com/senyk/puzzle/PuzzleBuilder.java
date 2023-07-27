@@ -54,7 +54,7 @@ public class PuzzleBuilder {
     PuzzleBuilder p = new PuzzleBuilder();
     while (rows!=0) {
       if (puzzle.isEmpty()){
-        puzzle.addFirst((LinkedList<Image>) images.get(0));
+        puzzle.addFirst(images.get(0));
         images.remove(0);
       }
       else if (wayOfBuildIsBottom){
@@ -74,7 +74,7 @@ public class PuzzleBuilder {
           wayOfBuildIsBottom = false;
         }
         else {
-          puzzle.addFirst((LinkedList<Image>) images.get(maxPosition));
+          puzzle.addFirst(images.get(maxPosition));
           images.remove(maxPosition);
         }
       }
@@ -90,7 +90,7 @@ public class PuzzleBuilder {
                   .toArray()));
         }
         int maxPosition = p.getMaxPosition(percents);
-        puzzle.addFirst((LinkedList<Image>) images.get(maxPosition));
+        puzzle.addFirst(images.get(maxPosition));
         images.remove(maxPosition);
         }
 

@@ -23,17 +23,13 @@ public class Main {
     LinkedList<Image> images = bufferedImages.stream()
         .map(Image::new)
         .collect(Collectors.toCollection(LinkedList::new));
-    System.out.println(images.size());
     for (int i = 0; i < rows; i++) {
       puzzles.add(PuzzleBuilder.buildRow(images,columns));
     }
-    System.out.println(puzzles.get(0).size());
-    System.out.println(puzzles.get(1).size());
     List<Image> result = new java.util.ArrayList<>(PuzzleBuilder.buildPuzzle(puzzles, rows)
         .stream()
         .flatMap(LinkedList::stream)
         .toList());;
-    System.out.println(result.size());
     Collections.reverse(result);
     for (int i = 0; i < result.size(); i++) {
       String name = "src/main/resources/sub-img-"+i+".jpg";

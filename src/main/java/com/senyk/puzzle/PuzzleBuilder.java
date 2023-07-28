@@ -12,33 +12,35 @@ public class PuzzleBuilder {
     LinkedList<Image> row = new LinkedList<>();
     boolean wayOfBuildIsRight = true;
     PuzzleBuilder p = new PuzzleBuilder();
-    while (columns!=0) {
+    while (columns>0) {
       if (row.isEmpty()){
         row.addFirst(images.get(0));
         images.remove(0);
       }
       else if (wayOfBuildIsRight){
-        List<Double> percents = new ArrayList<>();
+        List<Integer> countCompatibility= new ArrayList<>();
         for (Image image : images) {
-          percents.add(ImageCompatibility.percentCompatibilityOfImages(row.getLast().getRIGHT(), image.getLEFT()));
+          countCompatibility.add(ImageCompatibility.countCompatibilityOfImages(row.getLast().getRIGHT(), image.getLEFT()));
         }
-        int maxPosition = p.getMaxPosition(percents);
+        int maxPosition = p.getMaxPosition(countCompatibility);
 
         if (maxPosition == -1) {
           wayOfBuildIsRight = false;
+          columns++;
         }
         else {
-          row.addFirst(images.get(maxPosition));
+          row.addLast(images.get(maxPosition));
           images.remove(maxPosition);
         }
       }
       else {
-        List<Double> percents = new ArrayList<>();
+        List<Integer> countCompatibility = new ArrayList<>();
         for (Image image : images) {
-          percents.add(ImageCompatibility.percentCompatibilityOfImages(row.getFirst().getLEFT(), image.getRIGHT()));
+          countCompatibility.add(ImageCompatibility.countCompatibilityOfImages(row.getFirst().getLEFT(), image.getRIGHT()));
         }
-        int maxPosition = p.getMaxPosition(percents);
+        int maxPosition = p.getMaxPosition(countCompatibility);
         row.addFirst(images.get(maxPosition));
+
         images.remove(maxPosition);
       }
       columns--;
@@ -52,68 +54,68 @@ public class PuzzleBuilder {
     LinkedList<LinkedList<Image>> puzzle = new LinkedList<>();
     boolean wayOfBuildIsBottom = true;
     PuzzleBuilder p = new PuzzleBuilder();
-    while (rows!=0) {
+    while (rows>0) {
       if (puzzle.isEmpty()){
         puzzle.addFirst(images.get(0));
         images.remove(0);
       }
       else if (wayOfBuildIsBottom){
-        List<Double> percents = new ArrayList<>();
-        for (List<Image> image : images) {
-          percents.add(ImageCompatibility.percentCompatibilityOfImages(
-              puzzle.getLast().stream()
+        List<Integer> countCompatibility = new ArrayList<>();
+        for (LinkedList<Image> image : images) {
+          countCompatibility.add(ImageCompatibility.countCompatibilityOfImages(
+              puzzle.getLast()
+                  .stream()
                   .flatMapToInt(myClass -> IntStream.of(myClass.getBOTTOM()))
                   .toArray(),
               image.stream()
-              .flatMapToInt(myClass -> IntStream.of(myClass.getTOP()))
-              .toArray()));
+                  .flatMapToInt(myClass -> IntStream.of(myClass.getTOP()))
+                  .toArray()));
         }
-        int maxPosition = p.getMaxPosition(percents);
+        int maxPosition = p.getMaxPosition(countCompatibility);
 
         if (maxPosition == -1) {
           wayOfBuildIsBottom = false;
+          rows++;
         }
         else {
-          puzzle.addFirst(images.get(maxPosition));
-          images.remove(maxPosition);
+          puzzle.addLast(images.get(maxPosition));
+          images.remove(puzzle.getLast());
         }
       }
       else {
-        List<Double> percents = new ArrayList<>();
-        for (List<Image> image : images) {
-          percents.add(ImageCompatibility.percentCompatibilityOfImages(
-              puzzle.getLast().stream()
+        List<Integer> countCompatibility = new ArrayList<>();
+        for (LinkedList<Image> image : images) {
+          countCompatibility.add(ImageCompatibility.countCompatibilityOfImages(
+              puzzle.getFirst()
+                  .stream()
                   .flatMapToInt(myClass -> IntStream.of(myClass.getTOP()))
                   .toArray(),
               image.stream()
                   .flatMapToInt(myClass -> IntStream.of(myClass.getBOTTOM()))
                   .toArray()));
         }
-        int maxPosition = p.getMaxPosition(percents);
+        int maxPosition = p.getMaxPosition(countCompatibility);
         puzzle.addFirst(images.get(maxPosition));
-        images.remove(maxPosition);
-        }
-
+        images.remove(puzzle.getFirst());
+      }
       rows--;
-
     }
 
     return puzzle;
   }
 
-  private int getMaxPosition(List<Double> percents){
+  private int getMaxPosition(List<Integer> counts){
 
-    double maxPercent = 0;
+    int maxCount = 0;
     int maxPosition = -1;
 
-    for (int i = 0; i < percents.size(); i++) {
-      double currentPercent = percents.get(i);
-      if (currentPercent > maxPercent) {
-        maxPercent = currentPercent;
+    for (int i = 0; i < counts.size(); i++) {
+      int currentPercent = counts.get(i);
+      if (currentPercent > maxCount) {
+        maxCount = currentPercent;
         maxPosition = i;
       }
     }
-
     return maxPosition;
   }
 }

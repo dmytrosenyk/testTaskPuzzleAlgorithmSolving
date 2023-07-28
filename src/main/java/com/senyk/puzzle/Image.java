@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class Image {
+  private int index;
   private int[] TOP;
   private int[] LEFT;
   private int[] RIGHT;
@@ -64,5 +65,16 @@ public class Image {
   public BufferedImage getImage() {
 
     return image;
+  }
+
+  public void setIndex(int index) {
+
+    this.index = index;
+  }
+
+  @Override
+  public String toString() {
+
+    return String.valueOf(index);
   }
 }
